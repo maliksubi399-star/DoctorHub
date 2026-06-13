@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --dark-bg: #0f172a;
+    --dark-surface: #1e293b;
+    --dark-text: #e2e8f0;
+  }
+
+  body {
+    @apply bg-background text-slate-800 font-sans antialiased;
+  }
+  
+  .dark body {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-white bg-primary text-white hover:bg-primary-hover px-4 py-2;
+  }
+  
+  .dark .btn-primary {
+    @apply ring-offset-slate-950 hover:bg-cyan-400 bg-cyan-500 text-slate-950 font-semibold;
+  }
+  
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-white border border-slate-200 hover:bg-slate-100 hover:text-slate-900 px-4 py-2;
+  }
+  
+  .dark .btn-outline {
+    @apply border-cyan-500 text-cyan-400 hover:bg-slate-700 hover:border-cyan-400 ring-offset-slate-950;
+  }
+  
+  .input-field {
+    @apply flex h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  .dark .input-field {
+    @apply border-slate-700 text-slate-100 placeholder:text-slate-500 focus:ring-cyan-500 focus:border-cyan-500;
+    background-color: #0f172a;
+  }
+  
+  .card {
+    @apply rounded-xl border border-slate-200 bg-white text-slate-950 shadow-sm;
+  }
+  
+  .dark .card {
+    @apply border-slate-700 text-slate-100 shadow-lg;
+    background-color: #1e293b;
+  }
+}

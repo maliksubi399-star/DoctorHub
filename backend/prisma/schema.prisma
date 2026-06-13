@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String
+  createdAt DateTime @default(now())
+  
+  patient   Patient?
+  doctor    Doctor?
+  assistant Assistant?
+}
+
+model Patient {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id])
+  dob          DateTime
+  gender       String
+  bloodGroup   String
+  
+  appointments   Appointment[]
+  medicalHistory MedicalHistory[]
+}
+
+model Doctor {
+  id             Int      @id @default(autoincrement())
+  userId         Int      @unique
+  user           User     @relation(fields: [userId], references: [id])
+  specialization String
+  treatmentType  String   // ALLOPATHIC, HOMEOPATHIC, HERBAL
+  experience     Int
+  bio            String
+
+  assistants     Assistant[]
+  clinics        Clinic[]
+  appointments   Appointment[]
+  prescriptions  Prescription[]
+  medicalHistory MedicalHistory[]
+}
+
+model Assistant {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  user      User   @relation(fields: [userId], references: [id])
+  doctorId  Int
+  doctor    Doctor @relation(fields: [doctorId], references: [id])
+}
+
+model Clinic {
+  id        Int      @id @default(autoincrement())
+  doctorId  Int
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  name      String
+  address   String
+  timings   String
+  
+  appointments Appointment[]
+}
+
+model Appointment {
+  id        Int      @id @default(autoincrement())
+  patientId Int
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  doctorId  Int
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  clinicId  Int
+  clinic    Clinic   @relation(fields: [clinicId], references: [id])
+  date      DateTime
+  time      String
+  status    String @default("PENDING")
+  
+  payment       Payment?
+  prescription  Prescription?
+}
+
+model Payment {
+  id            Int         @id @default(autoincrement())
+  appointmentId Int         @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  screenshotUrl String
+  verifiedBy    Int?        // Assistant User ID
+  status        String @default("PENDING")
+}
+
+model Prescription {
+  id            Int         @id @default(autoincrement())
+  appointmentId Int         @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  doctorId      Int
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
+  details       String
+  createdAt     DateTime    @default(now())
+}
+
+model MedicalHistory {
+  id        Int      @id @default(autoincrement())
+  patientId Int
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  doctorId  Int
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  notes     String
+  createdAt DateTime @default(now())
+}
